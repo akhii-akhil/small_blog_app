@@ -2,15 +2,17 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 const Blogs = () => {
+    useEffect(() => {
+        console.log(JSON.parse(sessionStorage.getItem("id")));
+    })
+    const [loader,setLoader]=useState(false)
     const [data, setData] = useState(null)
     useEffect(() => {
-        axios.get("https://jsonplaceholder.typicode.com/posts")
+        setLoader(true)
+        axios.get(`https://jsonplaceholder.typicode.com/users/${JSON.parse(sessionStorage.getItem("id")).id}/posts`)
             .then((res) => {
-                const d = res.data.filter((i) => {
-                    return i.userId == JSON.parse(sessionStorage.getItem("id")).id
-                })
-                setData(d)
-                console.log(d);
+                setLoader(false)
+                setData(res.data)
             })
     }, [])
     return (
@@ -36,6 +38,9 @@ const Blogs = () => {
 
                                 )
                             })
+                        }
+                        {
+                            loader && <div className='loader flex'/>
                         }
 
                     </div>
